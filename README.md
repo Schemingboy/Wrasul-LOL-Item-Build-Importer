@@ -1,26 +1,32 @@
 # Wrasul LOL Item Build Importer
 
-把 Wrasul 发布的英雄联盟出装 JSON 导入到本地英雄联盟物品方案目录。
+小白版英雄联盟出装导入器：双击打开，粘贴 Wrasul 的 B 站动态链接，点一下导入。
 
-项目中文名可以理解为：`Wrasul-LOL-装备导入器`。GitHub 仓库名建议使用英文：
+## 普通用户怎么用
+
+1. 打开 GitHub Release，下载 `Wrasul-LOL-Item-Build-Importer.exe`。
+2. 关闭英雄联盟客户端和游戏。
+3. 双击打开 EXE。
+4. 粘贴 Wrasul 的 B 站动态链接。
+5. 确认 `League of Legends` 文件夹路径。
+6. 点击“导入出装”。
+7. 打开英雄联盟，在商店的物品方案里查看。
+
+项目地址：
 
 ```text
-Wrasul-LOL-Item-Build-Importer
+https://github.com/Schemingboy/Wrasul-LOL-Item-Build-Importer
 ```
 
 ## 它做什么
 
-脚本读取 B 站动态 URL 或本地 JSON 文件，提取英雄联盟 item set JSON，校验格式，然后写入：
+工具读取 B 站动态中的出装 JSON，然后写入英雄联盟客户端支持的本地物品方案目录：
 
 ```text
 <League of Legends>\Config\Champions\<ChampionKey>\Recommended\
 ```
 
-默认按英雄拆分安装。也可以用 `--target global` 写入：
-
-```text
-<League of Legends>\Config\Global\Recommended\
-```
+默认会按英雄安装，并在写入前备份旧的 `wrasul-*.json` 文件。
 
 ## 安全边界
 
@@ -34,65 +40,64 @@ Wrasul-LOL-Item-Build-Importer
 - 拦截或改写网络请求
 - 保存 Riot 账号、密码、令牌或登录态
 
-安装前请关闭英雄联盟客户端和游戏。脚本默认会检测客户端进程，发现正在运行时拒绝写入。
+如果检测到英雄联盟客户端正在运行，工具会拒绝写入。先关闭客户端再导入。
 
-## 使用方法
+## 常见问题
 
-源码运行：
+### 找不到 League of Legends 文件夹怎么办？
+
+点击“浏览...”，选择你的英雄联盟安装目录。常见路径是：
+
+```text
+C:\Riot Games\League of Legends
+D:\Riot Games\League of Legends
+```
+
+### 导入失败怎么办？
+
+先检查三件事：
+
+1. 英雄联盟客户端和游戏是否已经关闭。
+2. B 站动态链接是否能正常打开。
+3. 选择的目录是否真的是 `League of Legends` 文件夹。
+
+### 会不会影响账号安全？
+
+工具不读取账号、不登录 Riot、不碰游戏进程，只写本地物品方案 JSON。它的作用更接近“帮你把出装方案文件放到正确文件夹”。
+
+## 开发者 / 高级用法
+
+源码运行 GUI：
 
 ```powershell
 $env:PYTHONPATH="src"
-python -m wrasul_lol_item_build_importer --source "https://www.bilibili.com/opus/1213040949301608448" --target global --output wrasul.json
+python -m wrasul_lol_item_build_importer.gui
 ```
 
-先 dry-run，确认会写哪些文件：
-
-```powershell
-$env:PYTHONPATH="src"
-python -m wrasul_lol_item_build_importer --source "https://www.bilibili.com/opus/1213040949301608448" --lol-dir "C:\Riot Games\League of Legends"
-```
-
-确认无误后安装：
+命令行导入：
 
 ```powershell
 $env:PYTHONPATH="src"
 python -m wrasul_lol_item_build_importer --source "https://www.bilibili.com/opus/1213040949301608448" --lol-dir "C:\Riot Games\League of Legends" --install
 ```
 
-从本地 JSON 文件安装：
-
-```powershell
-$env:PYTHONPATH="src"
-python -m wrasul_lol_item_build_importer --source ".\wrasul.json" --lol-dir "C:\Riot Games\League of Legends" --install
-```
-
-## 参数
-
-- `--source`：必填。B 站动态 URL 或本地 JSON 文件。
-- `--lol-dir`：英雄联盟安装根目录。
-- `--install`：真正写入文件。不加这个参数时只 dry-run。
-- `--target champion|global`：默认 `champion`，按英雄目录安装；`global` 写入全局目录。
-- `--output`：导出提取和规范化后的 JSON。
-- `--keep-old`：保留同前缀旧文件。
-- `--prefix`：生成文件名前缀，默认 `wrasul`。
-
-## 验证
+运行测试：
 
 ```powershell
 python -m unittest discover -s tests
 ```
 
-当前测试覆盖：
+构建 EXE：
 
-- 从 B 站 HTML 形态中提取转义 JSON
-- 校验 item set / block / item 基本结构
-- dry-run 不写磁盘
-- 安装到临时目录
-- 备份并替换旧的生成文件
+```powershell
+.\build_exe.ps1
+```
 
-## 说明
+构建产物：
 
-B 站动态内容属于发布者。仓库只保留最小示例，不内置完整版本出装内容。每次新版本发布后，使用新的动态 URL 运行脚本即可。
+```text
+dist\Wrasul-LOL-Item-Build-Importer.exe
+```
 
 ## Riot 声明
 

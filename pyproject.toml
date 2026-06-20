@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "wrasul-lol-item-build-importer"
-version = "0.1.0"
+version = "0.2.0"
 description = "Import Wrasul League of Legends item build JSON into local item set files."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -14,6 +14,7 @@ keywords = ["league-of-legends", "item-sets", "riot-games", "wrasul"]
 
 [project.scripts]
 wrasul-lol-items = "wrasul_lol_item_build_importer.cli:main"
+wrasul-lol-items-gui = "wrasul_lol_item_build_importer.gui:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
