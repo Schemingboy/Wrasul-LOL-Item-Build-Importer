@@ -1,0 +1,16 @@
+[
+  {
+    "title": "Sample ADC Build",
+    "associatedMaps": [11, 12],
+    "associatedChampions": [67, 222],
+    "blocks": [
+      {
+        "type": "Core",
+        "items": [
+          { "id": "6672", "count": 1 },
+          { "id": "3006", "count": 1 }
+        ]
+      }
+    ]
+  }
+]
